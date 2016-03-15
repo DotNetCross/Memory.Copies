@@ -4,7 +4,7 @@ using System.Numerics;
 namespace DotNetCross.Memory.Copies.Benchmarks
 {
     // https://github.com/IllyriadGames/ByteArrayExtensions/blob/master/src/IllyriadGames.ByteArrayExtensions/VectorizedCopyExtension.cs
-    public static class IllyriadVectorizedCopy
+    public static class Illyriad
     {
         // Will be Jit'd to consts https://github.com/dotnet/coreclr/issues/1079
         private static readonly int _vectorSpan = Vector<byte>.Count;
@@ -36,7 +36,7 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         /// <remarks>
         /// Code must be optimized, in release mode and <see cref="Vector"/>.IsHardwareAccelerated must be true for the performance benefits.
         /// </remarks>
-        public unsafe static void VectorizedCopy(this byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
+        public unsafe static void VectorizedCopy(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
         {
 #if !DEBUG
             // Tests need to check even if IsHardwareAccelerated == false

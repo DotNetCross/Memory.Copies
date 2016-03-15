@@ -54,7 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CopiesBenchmark.cs" />
-    <Compile Include="IllyriadVectorizedCopy.cs" />
+    <Compile Include="Anderman.cs" />
+    <Compile Include="Illyriad.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

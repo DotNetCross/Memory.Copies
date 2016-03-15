@@ -49,7 +49,13 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         [Benchmark]
         public void IllyriadVectorizedCopy()
         {
-            bufferFrom.VectorizedCopy(Index, bufferTo, Index, BytesCopied);
+            Illyriad.VectorizedCopy(bufferFrom, Index, bufferTo, Index, BytesCopied);
+        }
+
+        [Benchmark]
+        public void AndermanVectorizedCopy()
+        {
+            Anderman.VectorizedCopy(bufferFrom, Index, bufferTo, Index, BytesCopied);
         }
     }
 }
