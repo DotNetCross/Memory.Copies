@@ -57,5 +57,15 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         {
             Anderman.VectorizedCopy(bufferFrom, Index, bufferTo, Index, BytesCopied);
         }
+
+        [Benchmark]
+        public unsafe void UnsafeCopyBlock()
+        {
+            fixed (byte* src = bufferFrom)
+            fixed (byte* dst = bufferFrom)
+            {
+                Unsafe.CopyBlock(dst + Index, src + Index, (uint)BytesCopied);
+            }
+        }
     }
 }
