@@ -57,8 +57,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UnsafeAnderman.cs" />
     <Compile Include="CopiesBenchmark.cs" />
     <Compile Include="Anderman.cs" />
+    <Compile Include="UnsafeIllyriad.cs" />
     <Compile Include="Illyriad.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
