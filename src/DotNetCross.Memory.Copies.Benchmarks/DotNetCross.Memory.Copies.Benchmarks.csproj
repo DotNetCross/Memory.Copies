@@ -141,7 +141,7 @@
     <Compile Include="Anderman.cs" />
     <Compile Include="UnsafeBufferMemmoveJamesqo.cs" />
     <Compile Include="UnsafeBufferMemmoveOriginal.cs" />
-    <Compile Include="UnsafeBufferMemmoveTweaked.cs" />
+    <Compile Include="UnsafeBufferMemmoveTannerGooding.cs" />
     <Compile Include="UnsafeIllyriad.cs" />
     <Compile Include="Illyriad.cs" />
     <Compile Include="Program.cs" />

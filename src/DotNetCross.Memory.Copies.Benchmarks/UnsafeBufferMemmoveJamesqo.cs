@@ -15,6 +15,23 @@ namespace DotNetCross.Memory.Copies.Benchmarks
 {
     public class UnsafeBufferMemmoveJamesqo
     {
+        public static unsafe void Memmove(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
+        {
+            if (src == null || dst == null) throw new ArgumentNullException(nameof(src));
+            if (count < 0 || srcOffset < 0 || dstOffset < 0) throw new ArgumentOutOfRangeException(nameof(count));
+            if (srcOffset + count > src.Length) throw new ArgumentException(nameof(src));
+            if (dstOffset + count > dst.Length) throw new ArgumentException(nameof(dst));
+
+            fixed (byte* srcOrigin = src)
+            fixed (byte* dstOrigin = dst)
+            {
+                var pSrc = srcOrigin + srcOffset;
+                var pDst = dstOrigin + dstOffset;
+
+                Memmove(pDst, pSrc, (nuint)count);
+            }
+        }
+
         internal unsafe static void Memmove(byte* dest, byte* src, nuint len)
         {
             // P/Invoke into the native version when the buffers are overlapping and the copy needs to be performed backwards
