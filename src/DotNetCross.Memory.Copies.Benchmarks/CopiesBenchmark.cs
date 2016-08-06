@@ -80,5 +80,11 @@ namespace DotNetCross.Memory.Copies.Benchmarks
                 Unsafe.CopyBlock(dst + Index, src + Index, (uint)BytesCopied);
             }
         }
+
+        [Benchmark]
+        public unsafe void UnsafeMemmoveTweaked()
+        {
+            UnsafeBufferMemmoveTweaked.Memmove(bufferFrom, Index, bufferTo, Index, BytesCopied);
+        }
     }
 }
