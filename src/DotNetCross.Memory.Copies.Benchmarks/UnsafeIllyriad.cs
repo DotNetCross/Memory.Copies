@@ -54,7 +54,8 @@ namespace DotNetCross.Memory.Copies.Benchmarks
 #if !DEBUG
                 // Tests need to check even if IsHardwareAccelerated == false
                 // Check will be Jitted away https://github.com/dotnet/coreclr/issues/1079
-                if (Vector.IsHardwareAccelerated && count <= 512 + 64)
+                // TEST: Disable Unsafe.Copy fall back
+                //if (Vector.IsHardwareAccelerated && count <= 512 + 64)
                 {
 #endif
                     while (count >= _vectorSpan4)
@@ -139,10 +140,10 @@ namespace DotNetCross.Memory.Copies.Benchmarks
                         }
 #if !DEBUG
                 }
-                else
-                {
-                    Unsafe.CopyBlock(dstPtr, srcPtr, (uint)count);
-                }
+//                else
+//                {
+//                    Unsafe.CopyBlock(dstPtr, srcPtr, (uint)count);
+//                }
 #endif
             }
         }

@@ -136,12 +136,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Msvcrt.cs" />
     <Compile Include="UnsafeAnderman.cs" />
     <Compile Include="CopiesBenchmark.cs" />
     <Compile Include="Anderman.cs" />
+    <Compile Include="UnsafeBufferMemmoveJamesqo2.cs" />
     <Compile Include="UnsafeBufferMemmoveJamesqo.cs" />
     <Compile Include="UnsafeBufferMemmoveOriginal.cs" />
     <Compile Include="UnsafeBufferMemmoveTannerGooding.cs" />
+    <Compile Include="UnsafeCpblk.cs" />
     <Compile Include="UnsafeIllyriad.cs" />
     <Compile Include="Illyriad.cs" />
     <Compile Include="Program.cs" />

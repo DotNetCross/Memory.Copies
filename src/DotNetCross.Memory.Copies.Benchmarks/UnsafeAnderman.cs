@@ -29,9 +29,10 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         {
             if (count > 512 + 64)
             {
+                // TEST: Disable Array-Copy fall back
                 // In-built copy faster for large arrays (vs repeated bounds checks on Vector.ctor?)
-                Array.Copy(src, srcOffset, dst, dstOffset, count);
-                return;
+                //Array.Copy(src, srcOffset, dst, dstOffset, count);
+                //return;
             }
             var orgCount = count;
 

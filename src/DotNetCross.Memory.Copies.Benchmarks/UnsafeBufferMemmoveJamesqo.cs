@@ -37,7 +37,7 @@ namespace DotNetCross.Memory.Copies.Benchmarks
             // P/Invoke into the native version when the buffers are overlapping and the copy needs to be performed backwards
             // This check can produce false positives for lengths greater than Int32.MaxInt. It is fine because we want to use PInvoke path for the large lengths anyway.
 
-            if ((nuint)dest - (nuint)src < len) goto PInvoke;
+            //if ((nuint)dest - (nuint)src < len) goto PInvoke;
 
             // This is portable version of memcpy. It mirrors what the hand optimized assembly versions of memcpy typically do.
             //
@@ -244,8 +244,9 @@ namespace DotNetCross.Memory.Copies.Benchmarks
                     return;
             }
 
+            // TEST: Disable Array-Copy fall back
             // P/Invoke into the native version for large lengths
-            if (len >= 512) goto PInvoke;
+            //if (len >= 512) goto PInvoke;
 
             nuint i = 0; // byte offset at which we're copying
 
@@ -350,13 +351,9 @@ namespace DotNetCross.Memory.Copies.Benchmarks
 
             return;
 
-            PInvoke:
+            //PInvoke:
             //_Memmove(dest, src, len);
-            memmove(dest, src, (int)len);
-
+            //memmove(dest, src, (int)len);
         }
-
-        [DllImport("msvcrt.dll", SetLastError = false)]
-        static unsafe extern IntPtr memmove(void* dest, void* src, int count);
     }
 }
