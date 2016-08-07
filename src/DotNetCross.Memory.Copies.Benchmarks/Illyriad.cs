@@ -41,14 +41,14 @@ namespace DotNetCross.Memory.Copies.Benchmarks
 #if !DEBUG
             // Tests need to check even if IsHardwareAccelerated == false
             // Check will be Jitted away https://github.com/dotnet/coreclr/issues/1079
-            if (Vector.IsHardwareAccelerated)
+            //if (Vector.IsHardwareAccelerated)
             {
 #endif
             if (count > 512 + 64)
             {
                 // In-built copy faster for large arrays (vs repeated bounds checks on Vector.ctor?)
-                Array.Copy(src, srcOffset, dst, dstOffset, count);
-                return;
+                //Array.Copy(src, srcOffset, dst, dstOffset, count);
+                //return;
             }
             if (src == null) throw new ArgumentNullException(nameof(src));
             if (dst == null) throw new ArgumentNullException(nameof(dst));
@@ -143,11 +143,11 @@ namespace DotNetCross.Memory.Copies.Benchmarks
             }
 #if !DEBUG
             }
-            else
-            {
-                Array.Copy(src, srcOffset, dst, dstOffset, count);
-                return;
-            }
+            //else
+            //{
+            //    Array.Copy(src, srcOffset, dst, dstOffset, count);
+            //    return;
+            //}
 #endif
         }
     }
