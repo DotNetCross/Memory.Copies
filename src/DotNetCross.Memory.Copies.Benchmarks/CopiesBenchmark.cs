@@ -44,6 +44,7 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         [Benchmark]
         public void SimpleLoop()
         {
+            // No checks since it is not unsafe
             for (int i = 0; i < BytesCopied; i++)
             {
                 bufferTo[i + Index] = bufferFrom[i + Index];
@@ -60,6 +61,12 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         public void MsvcrtMemmove()
         {
             Msvcrt.Memmove(bufferFrom, Index, bufferTo, Index, BytesCopied);
+        }
+
+        [Benchmark]
+        public unsafe void UnsafeCopyBlock()
+        {
+            UnsafeCpblk.Copy(bufferFrom, Index, bufferTo, Index, BytesCopied);
         }
 
         [Benchmark]
@@ -84,12 +91,6 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         public unsafe void UnsafeAndermanVectorizedCopy()
         {
             UnsafeAnderman.VectorizedCopy(bufferFrom, Index, bufferTo, Index, BytesCopied);
-        }
-
-        [Benchmark]
-        public unsafe void UnsafeCopyBlock()
-        {
-            UnsafeCpblk.Copy(bufferFrom, Index, bufferTo, Index, BytesCopied);
         }
 
         [Benchmark]
