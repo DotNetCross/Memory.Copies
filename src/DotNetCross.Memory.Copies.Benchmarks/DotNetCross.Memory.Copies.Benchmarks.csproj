@@ -143,6 +143,7 @@
     <Compile Include="UnsafeBufferMemmoveJamesqo2.cs" />
     <Compile Include="UnsafeBufferMemmoveJamesqo.cs" />
     <Compile Include="UnsafeBufferMemmoveOriginal.cs" />
+    <Compile Include="UnsafeBufferMemmoveTannerGooding2.cs" />
     <Compile Include="UnsafeBufferMemmoveTannerGooding.cs" />
     <Compile Include="UnsafeCpblk.cs" />
     <Compile Include="UnsafeIllyriad.cs" />

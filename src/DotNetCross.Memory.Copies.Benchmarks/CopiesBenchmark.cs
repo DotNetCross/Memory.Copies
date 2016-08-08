@@ -26,7 +26,7 @@ namespace DotNetCross.Memory.Copies.Benchmarks
             33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64,
             65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96,
             128, 256, 508, 509, 510, 511, 512, 513, 512 + 31, 512 + 32, 512 + 35, 512 + 64,
-            1024, 2048, 4096, 8 * 1024, 16 * 1024, 32 * 1024, 64 * 1024, 128 * 1024)]
+            1024, 2048, 2500, 3000, 3072, 4096, 8 * 1024, 16 * 1024, 32 * 1024, 64 * 1024, 128 * 1024)]
         public int BytesCopied = 0;
         //[Params(0)]
         public int Index = 0;
@@ -61,6 +61,12 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         public void MsvcrtMemmove()
         {
             Msvcrt.Memmove(bufferFrom, Index, bufferTo, Index, BytesCopied);
+        }
+
+        [Benchmark]
+        public void MsvcrtMemmoveOverhead()
+        {
+            Msvcrt.Memmove(bufferFrom, Index, bufferTo, Index, 0);
         }
 
         [Benchmark]
@@ -115,6 +121,12 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         public unsafe void Buffer_MemmoveJamesqo2()
         {
             UnsafeBufferMemmoveJamesqo2.Memmove(bufferFrom, Index, bufferTo, Index, BytesCopied);
+        }
+
+        [Benchmark]
+        public unsafe void Buffer_MemmoveTannerGooding2()
+        {
+            UnsafeBufferMemmoveTannerGooding2.Memmove(bufferFrom, Index, bufferTo, Index, BytesCopied);
         }
     }
 }

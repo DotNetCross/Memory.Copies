@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotNetCross.Memory.Copies.Benchmarks
 {
-    // jamesqo, tannergooding optimized https://github.com/dotnet/coreclr/pull/6638 and https://github.com/dotnet/coreclr/pull/6627
+    // tannergooding optimized https://github.com/dotnet/coreclr/pull/6638 and https://github.com/dotnet/coreclr/pull/6627
     public class UnsafeBufferMemmoveTannerGooding
     {
         public static unsafe void Memmove(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
