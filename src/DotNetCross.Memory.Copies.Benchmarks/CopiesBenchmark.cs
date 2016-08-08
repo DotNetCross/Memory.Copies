@@ -14,8 +14,8 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         {
             public Config()
             {
-                Add(Job.AllJits.Select(j => j.WithLaunchCount(1).WithWarmupCount(1).WithTargetCount(5)).ToArray());
-                //Add(Job.RyuJitX64.WithLaunchCount(1).WithWarmupCount(1).WithTargetCount(5));
+                //Add(Job.AllJits.Select(j => j.WithLaunchCount(1).WithWarmupCount(1).WithTargetCount(5)).ToArray());
+                Add(Job.RyuJitX64.WithLaunchCount(1).WithWarmupCount(1).WithTargetCount(5));
                 Add(StatisticColumn.AllStatistics);
             }
         }
@@ -55,6 +55,12 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         public void BufferBlockCopy()
         {
             Buffer.BlockCopy(bufferFrom, Index, bufferTo, Index, BytesCopied);
+        }
+
+        [Benchmark]
+        public void BufferMemoryCopy()
+        {
+            UnsafeBufferMemoryCopy.Copy(bufferFrom, Index, bufferTo, Index, BytesCopied);
         }
 
         [Benchmark]
