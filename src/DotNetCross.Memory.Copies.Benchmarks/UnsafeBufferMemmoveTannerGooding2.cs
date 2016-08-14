@@ -62,7 +62,7 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         }
 #endif
 
-        private unsafe static void Memmove(byte* dst, byte* src, nuint len)
+        public unsafe static void Memmove(byte* dst, byte* src, nuint len)
         {
             switch (len)
             {

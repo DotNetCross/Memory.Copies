@@ -58,86 +58,86 @@ namespace DotNetCross.Memory.Copies.Benchmarks
                 //if (Vector.IsHardwareAccelerated && count <= 512 + 64)
                 {
 #endif
-                    while (count >= _vectorSpan4)
-                    {
-                        Unsafe.Write(dstPtr, Unsafe.Read<Vector<byte>>(srcPtr));
-                        Unsafe.Write(dstPtr + _vectorSpan, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan));
-                        Unsafe.Write(dstPtr + _vectorSpan2, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan2));
-                        Unsafe.Write(dstPtr + _vectorSpan3, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan3));
-                        if (count == _vectorSpan4) return;
-                        count -= _vectorSpan4;
-                        srcPtr += _vectorSpan4;
-                        dstPtr += _vectorSpan4;
-                    }
-                    if (count >= _vectorSpan2)
-                    {
-                        Unsafe.Write(dstPtr, Unsafe.Read<Vector<byte>>(srcPtr));
-                        Unsafe.Write(dstPtr + _vectorSpan, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan));
-                        if (count == _vectorSpan2) return;
-                        count -= _vectorSpan2;
-                        srcPtr += _vectorSpan4;
-                        dstPtr += _vectorSpan4;
-                    }
-                    if (count >= _vectorSpan)
-                    {
-                        Unsafe.Write(dstPtr, Unsafe.Read<Vector<byte>>(srcPtr));
-                        if (count == _vectorSpan) return;
-                        count -= _vectorSpan;
-                        srcPtr += _vectorSpan4;
-                        dstPtr += _vectorSpan4;
-                    }
-                    if (count > 0)
-                    {
-                            var pSrc = srcPtr;
-                            var dSrc = dstPtr;
+                while (count >= _vectorSpan4)
+                {
+                    Unsafe.Write(dstPtr, Unsafe.Read<Vector<byte>>(srcPtr));
+                    Unsafe.Write(dstPtr + _vectorSpan, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan));
+                    Unsafe.Write(dstPtr + _vectorSpan2, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan2));
+                    Unsafe.Write(dstPtr + _vectorSpan3, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan3));
+                    if (count == _vectorSpan4) return;
+                    count -= _vectorSpan4;
+                    srcPtr += _vectorSpan4;
+                    dstPtr += _vectorSpan4;
+                }
+                if (count >= _vectorSpan2)
+                {
+                    Unsafe.Write(dstPtr, Unsafe.Read<Vector<byte>>(srcPtr));
+                    Unsafe.Write(dstPtr + _vectorSpan, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan));
+                    if (count == _vectorSpan2) return;
+                    count -= _vectorSpan2;
+                    srcPtr += _vectorSpan4;
+                    dstPtr += _vectorSpan4;
+                }
+                if (count >= _vectorSpan)
+                {
+                    Unsafe.Write(dstPtr, Unsafe.Read<Vector<byte>>(srcPtr));
+                    if (count == _vectorSpan) return;
+                    count -= _vectorSpan;
+                    srcPtr += _vectorSpan4;
+                    dstPtr += _vectorSpan4;
+                }
+                if (count > 0)
+                {
+                    var pSrc = srcPtr;
+                    var dSrc = dstPtr;
 
-                            if (count >= _longSpan)
-                            {
-                                var lpSrc = (long*)pSrc;
-                                var ldSrc = (long*)dSrc;
+                    if (count >= _longSpan)
+                    {
+                        var lpSrc = (long*)pSrc;
+                        var ldSrc = (long*)dSrc;
 
-                                if (count < _longSpan2)
-                                {
-                                    count -= _longSpan;
-                                    pSrc += _longSpan;
-                                    dSrc += _longSpan;
-                                    *ldSrc = *lpSrc;
-                                }
-                                else if (count < _longSpan3)
-                                {
-                                    count -= _longSpan2;
-                                    pSrc += _longSpan2;
-                                    dSrc += _longSpan2;
-                                    *ldSrc = *lpSrc;
-                                    *(ldSrc + 1) = *(lpSrc + 1);
-                                }
-                                else
-                                {
-                                    count -= _longSpan3;
-                                    pSrc += _longSpan3;
-                                    dSrc += _longSpan3;
-                                    *ldSrc = *lpSrc;
-                                    *(ldSrc + 1) = *(lpSrc + 1);
-                                    *(ldSrc + 2) = *(lpSrc + 2);
-                                }
-                            }
-                            if (count >= _intSpan)
-                            {
-                                var ipSrc = (int*)pSrc;
-                                var idSrc = (int*)dSrc;
-                                count -= _intSpan;
-                                pSrc += _intSpan;
-                                dSrc += _intSpan;
-                                *idSrc = *ipSrc;
-                            }
-                            while (count > 0)
-                            {
-                                count--;
-                                *dSrc = *pSrc;
-                                dSrc += 1;
-                                pSrc += 1;
-                            }
+                        if (count < _longSpan2)
+                        {
+                            count -= _longSpan;
+                            pSrc += _longSpan;
+                            dSrc += _longSpan;
+                            *ldSrc = *lpSrc;
                         }
+                        else if (count < _longSpan3)
+                        {
+                            count -= _longSpan2;
+                            pSrc += _longSpan2;
+                            dSrc += _longSpan2;
+                            *ldSrc = *lpSrc;
+                            *(ldSrc + 1) = *(lpSrc + 1);
+                        }
+                        else
+                        {
+                            count -= _longSpan3;
+                            pSrc += _longSpan3;
+                            dSrc += _longSpan3;
+                            *ldSrc = *lpSrc;
+                            *(ldSrc + 1) = *(lpSrc + 1);
+                            *(ldSrc + 2) = *(lpSrc + 2);
+                        }
+                    }
+                    if (count >= _intSpan)
+                    {
+                        var ipSrc = (int*)pSrc;
+                        var idSrc = (int*)dSrc;
+                        count -= _intSpan;
+                        pSrc += _intSpan;
+                        dSrc += _intSpan;
+                        *idSrc = *ipSrc;
+                    }
+                    while (count > 0)
+                    {
+                        count--;
+                        *dSrc = *pSrc;
+                        dSrc += 1;
+                        pSrc += 1;
+                    }
+                }
 #if !DEBUG
                 }
 //                else
@@ -146,6 +146,105 @@ namespace DotNetCross.Memory.Copies.Benchmarks
 //                }
 #endif
             }
+        }
+
+        public unsafe static void UnsafeVectorizedCopy(byte* dstPtr, byte* srcPtr, int count)
+        {
+#if !DEBUG
+            // Tests need to check even if IsHardwareAccelerated == false
+            // Check will be Jitted away https://github.com/dotnet/coreclr/issues/1079
+            // TEST: Disable Unsafe.Copy fall back
+            //if (Vector.IsHardwareAccelerated && count <= 512 + 64)
+            {
+#endif
+            while (count >= _vectorSpan4)
+            {
+                Unsafe.Write(dstPtr, Unsafe.Read<Vector<byte>>(srcPtr));
+                Unsafe.Write(dstPtr + _vectorSpan, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan));
+                Unsafe.Write(dstPtr + _vectorSpan2, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan2));
+                Unsafe.Write(dstPtr + _vectorSpan3, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan3));
+                if (count == _vectorSpan4) return;
+                count -= _vectorSpan4;
+                srcPtr += _vectorSpan4;
+                dstPtr += _vectorSpan4;
+            }
+            if (count >= _vectorSpan2)
+            {
+                Unsafe.Write(dstPtr, Unsafe.Read<Vector<byte>>(srcPtr));
+                Unsafe.Write(dstPtr + _vectorSpan, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan));
+                if (count == _vectorSpan2) return;
+                count -= _vectorSpan2;
+                srcPtr += _vectorSpan4;
+                dstPtr += _vectorSpan4;
+            }
+            if (count >= _vectorSpan)
+            {
+                Unsafe.Write(dstPtr, Unsafe.Read<Vector<byte>>(srcPtr));
+                if (count == _vectorSpan) return;
+                count -= _vectorSpan;
+                srcPtr += _vectorSpan4;
+                dstPtr += _vectorSpan4;
+            }
+            if (count > 0)
+            {
+                var pSrc = srcPtr;
+                var dSrc = dstPtr;
+
+                if (count >= _longSpan)
+                {
+                    var lpSrc = (long*)pSrc;
+                    var ldSrc = (long*)dSrc;
+
+                    if (count < _longSpan2)
+                    {
+                        count -= _longSpan;
+                        pSrc += _longSpan;
+                        dSrc += _longSpan;
+                        *ldSrc = *lpSrc;
+                    }
+                    else if (count < _longSpan3)
+                    {
+                        count -= _longSpan2;
+                        pSrc += _longSpan2;
+                        dSrc += _longSpan2;
+                        *ldSrc = *lpSrc;
+                        *(ldSrc + 1) = *(lpSrc + 1);
+                    }
+                    else
+                    {
+                        count -= _longSpan3;
+                        pSrc += _longSpan3;
+                        dSrc += _longSpan3;
+                        *ldSrc = *lpSrc;
+                        *(ldSrc + 1) = *(lpSrc + 1);
+                        *(ldSrc + 2) = *(lpSrc + 2);
+                    }
+                }
+                if (count >= _intSpan)
+                {
+                    var ipSrc = (int*)pSrc;
+                    var idSrc = (int*)dSrc;
+                    count -= _intSpan;
+                    pSrc += _intSpan;
+                    dSrc += _intSpan;
+                    *idSrc = *ipSrc;
+                }
+                while (count > 0)
+                {
+                    count--;
+                    *dSrc = *pSrc;
+                    dSrc += 1;
+                    pSrc += 1;
+                }
+            }
+#if !DEBUG
+            }
+//                else
+//                {
+//                    Unsafe.CopyBlock(dstPtr, srcPtr, (uint)count);
+//                }
+#endif
+    
         }
     }
 }

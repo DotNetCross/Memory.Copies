@@ -143,5 +143,95 @@ namespace DotNetCross.Memory.Copies.Benchmarks
                 }
             }
         }
+        public unsafe static void UnsafeVectorizedCopy2(byte* pDst, byte* pSrc, int count)
+        {
+            while (count >= Vector<byte>.Count)
+            {
+                Unsafe.Write(pDst, Unsafe.Read<Vector<byte>>(pSrc));
+                count -= Vector<byte>.Count;
+                pSrc += Vector<byte>.Count;
+                pDst += Vector<byte>.Count;
+            }
+            switch (count)
+            {
+                case 1:
+                    pDst[0] = pSrc[0];
+                    return;
+
+                case 2:
+                    *((short*)pDst) = *((short*)pSrc);
+                    return;
+
+                case 3:
+                    *((short*)pDst) = *((short*)pSrc);
+                    pDst[2] = pSrc[2];
+                    return;
+
+                case 4:
+                    *((int*)pDst) = *((int*)pSrc);
+                    return;
+
+                case 5:
+                    *((int*)pDst) = *((int*)pSrc);
+                    pDst[4] = pSrc[4];
+                    return;
+
+                case 6:
+                    *((int*)pDst) = *((int*)pSrc);
+                    *((short*)(pDst + 4)) = *((short*)(pSrc + 4));
+                    return;
+
+                case 7:
+                    *((int*)pDst) = *((int*)pSrc);
+                    *((short*)(pDst + 4)) = *((short*)(pSrc + 4));
+                    pDst[6] = pSrc[6];
+                    return;
+
+                case 8:
+                    *((long*)pDst) = *((long*)pSrc);
+                    return;
+
+                case 9:
+                    *((long*)pDst) = *((long*)pSrc);
+                    pDst[8] = pSrc[8];
+                    return;
+
+                case 10:
+                    *((long*)pDst) = *((long*)pSrc);
+                    *((short*)(pDst + 8)) = *((short*)(pSrc + 8));
+                    return;
+
+                case 11:
+                    *((long*)pDst) = *((long*)pSrc);
+                    *((short*)(pDst + 8)) = *((short*)(pSrc + 8));
+                    pDst[10] = pSrc[10];
+                    return;
+
+                case 12:
+                    *((long*)pDst) = *((long*)pSrc);
+                    *((int*)(pDst + 8)) = *((int*)(pSrc + 8));
+                    return;
+
+                case 13:
+                    *((long*)pDst) = *((long*)pSrc);
+                    *((int*)(pDst + 8)) = *((int*)(pSrc + 8));
+                    pDst[12] = pSrc[12];
+                    return;
+
+                case 14:
+                    *((long*)pDst) = *((long*)pSrc);
+                    *((int*)(pDst + 8)) = *((int*)(pSrc + 8));
+                    *((short*)(pDst + 12)) = *((short*)(pSrc + 12));
+                    return;
+
+                case 15:
+                    *((long*)pDst) = *((long*)pSrc);
+                    *((int*)(pDst + 8)) = *((int*)(pSrc + 8));
+                    *((short*)(pDst + 12)) = *((short*)(pSrc + 12));
+                    pDst[14] = pSrc[14];
+                    return;
+
+            }
+        }
     }
 }

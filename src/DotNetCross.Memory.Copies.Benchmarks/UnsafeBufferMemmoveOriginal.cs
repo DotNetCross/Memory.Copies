@@ -28,18 +28,18 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         [System.Security.SecurityCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
 #if BIT64
-        internal unsafe static void Memmove(byte* dest, byte* src, ulong len)
+        public unsafe static void Memmove(byte* dest, byte* src, ulong len)
 #else
-        internal unsafe static void Memmove(byte* dest, byte* src, uint len)
+        public unsafe static void Memmove(byte* dest, byte* src, uint len)
 #endif
         {
             // P/Invoke into the native version when the buffers are overlapping and the copy needs to be performed backwards
             // This check can produce false positives for lengths greater than Int32.MaxInt. It is fine because we want to use PInvoke path for the large lengths anyway.
-//#if BIT64
-//            if ((ulong)dest - (ulong)src < len) goto PInvoke;
-//#else
-//            if (((uint)dest - (uint)src) < len) goto PInvoke;
-//#endif
+            //#if BIT64
+            //            if ((ulong)dest - (ulong)src < len) goto PInvoke;
+            //#else
+            //            if (((uint)dest - (uint)src) < len) goto PInvoke;
+            //#endif
             //
             // This is portable version of memcpy. It mirrors what the hand optimized assembly versions of memcpy typically do.
             //

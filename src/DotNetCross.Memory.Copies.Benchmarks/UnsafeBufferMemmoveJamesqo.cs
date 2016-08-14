@@ -32,7 +32,7 @@ namespace DotNetCross.Memory.Copies.Benchmarks
             }
         }
 
-        internal unsafe static void Memmove(byte* dest, byte* src, nuint len)
+        public unsafe static void Memmove(byte* dest, byte* src, nuint len)
         {
             // P/Invoke into the native version when the buffers are overlapping and the copy needs to be performed backwards
             // This check can produce false positives for lengths greater than Int32.MaxInt. It is fine because we want to use PInvoke path for the large lengths anyway.
