@@ -10,18 +10,18 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         [StructLayout(LayoutKind.Sequential, Size = 16)]
         private struct Buffer16
         {
-            ulong l1; ulong l2;
+            //ulong l1; ulong l2;
         }
 
         [StructLayout(LayoutKind.Sequential, Size = 32)]
         private struct Buffer32
         {
-            ulong l1; ulong l2; ulong l3; ulong l4;
+            //ulong l1; ulong l2; ulong l3; ulong l4;
         }
         [StructLayout(LayoutKind.Sequential, Size = 64)]
         private struct Buffer64
         {
-            ulong l1; ulong l2; ulong l3; ulong l4; ulong l5; ulong l6; ulong l7; ulong l8;
+            //ulong l1; ulong l2; ulong l3; ulong l4; ulong l5; ulong l6; ulong l7; ulong l8;
         }
 
 
