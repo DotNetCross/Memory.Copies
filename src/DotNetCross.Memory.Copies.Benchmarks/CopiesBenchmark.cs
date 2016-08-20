@@ -89,9 +89,15 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         }
 
         [Benchmark]
+        public void AndermanVectorizedSwitch()
+        {
+            UnsafeAnderman2.VectorizedCopy2(bufferFrom, Index, bufferTo, Index, BytesCopied);
+        }
+
+        [Benchmark]
         public unsafe void UnsafeIllyriadVectorizedCopy()
         {
-            UnsafeIllyriad.VectorizedCopy(bufferFrom, Index, bufferTo, Index, BytesCopied);
+            UnsafeIllyriad.VectorizedCopy(bufferFrom, Index, bufferTo, Index, BytesCopied); 
         }
 
         [Benchmark]

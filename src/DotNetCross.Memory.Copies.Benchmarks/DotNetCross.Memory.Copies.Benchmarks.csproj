@@ -138,6 +138,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UnsafeAnderman2.cs" />
     <Compile Include="UnsafeNietras.cs" />
     <Compile Include="UnsafeNoChecksCopiesBenchmark.cs" />
     <Compile Include="Msvcrt.cs" />
