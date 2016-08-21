@@ -62,6 +62,12 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         }
 
         [Benchmark]
+        public unsafe void UnsafeAndermanVectorized2()
+        {
+            UnsafeAnderman2.UnsafeVectorizedCopy2(bufferTo + Index, bufferFrom + Index, BytesCopied);
+        }
+
+        [Benchmark]
         public unsafe void Buffer_MemmoveOriginal()
         {
             UnsafeBufferMemmoveOriginal.Memmove(bufferTo + Index, bufferFrom + Index, (ulong)BytesCopied);
