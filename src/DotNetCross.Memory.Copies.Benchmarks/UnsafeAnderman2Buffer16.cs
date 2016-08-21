@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace DotNetCross.Memory.Copies.Benchmarks
 {
     // Based on Anderman primarily https://github.com/dotnet/coreclr/issues/2430#issuecomment-166566393
-    public static class UnsafeNietras
+    public static class UnsafeAnderman2Buffer16
     {
         [StructLayout(LayoutKind.Sequential, Size = 16)]
         private struct Buffer16

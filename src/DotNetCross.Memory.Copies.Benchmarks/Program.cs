@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using BenchmarkDotNet.Running;
 
 namespace DotNetCross.Memory.Copies.Benchmarks
 {
-    static class Program
+    unsafe static class Program
     {
         static readonly Action<string> Log = t => { Trace.WriteLine(t); Console.WriteLine(t); };
 
@@ -17,6 +16,7 @@ namespace DotNetCross.Memory.Copies.Benchmarks
                 new CommandChoice("Run Copies Benchmark (managed array)", RunCopiesBenchmark),
                 new CommandChoice("Run Unsafe No Checks Copies Benchmark (native array)", RunUnsafeNoChecksCopiesBenchmark),
                 new CommandChoice("Output new BytesToCopy list", OutputBytesToCopyList),
+                new CommandChoice("Test Unsafe Memmoves", TestUnsafeMemmoves),
             };
 
             WriteChoices(choices);
@@ -97,6 +97,29 @@ namespace DotNetCross.Memory.Copies.Benchmarks
             var message = $"Benchmark time: {elapsed} ms";
             Log(message);
         }
+
+        static void TestUnsafeMemmoves()
+        {
+            for (int i = 0; i < Memmoves.Length; i++)
+            {
+                MemmoveTests.TestMemmove(Memmoves[i]);
+            }
+        }
+
+        static readonly Memmove[] Memmoves = {
+            (dst, src, length) => Buffer.MemoryCopy(src, dst, length, length),
+            (dst, src, length) => Msvcrt.memmove(dst, src, length),
+            (dst, src, length) => Unsafe.CopyBlock(dst, src, (uint)length),
+            (dst, src, length) => UnsafeIllyriad.UnsafeVectorizedCopy((byte*)dst, (byte*)src, length),
+            (dst, src, length) => UnsafeAnderman.UnsafeVectorizedCopy2((byte*)dst, (byte*)src, length),
+            (dst, src, length) => UnsafeAnderman2.UnsafeVectorizedCopy2((byte*)dst, (byte*)src, length),
+            (dst, src, length) => UnsafeAnderman2Buffer16.Memmove((byte*)dst, (byte*)src, length),
+            (dst, src, length) => UnsafeBufferMemmoveOriginal.Memmove((byte*)dst, (byte*)src, (ulong)length),
+            (dst, src, length) => UnsafeBufferMemmoveJamesqo.Memmove((byte*)dst, (byte*)src, (ulong)length),
+            (dst, src, length) => UnsafeBufferMemmoveTannerGooding.Memmove((byte*)dst, (byte*)src, (uint)length),
+            (dst, src, length) => UnsafeBufferMemmoveJamesqo2.Memmove((byte*)dst, (byte*)src, (ulong)length),
+            (dst, src, length) => UnsafeBufferMemmoveTannerGooding2.Memmove((byte*)dst, (byte*)src, (ulong)length),
+        };
 
         static void OutputBytesToCopyList()
         {

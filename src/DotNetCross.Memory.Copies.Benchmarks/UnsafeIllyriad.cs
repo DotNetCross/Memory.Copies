@@ -75,16 +75,16 @@ namespace DotNetCross.Memory.Copies.Benchmarks
                     Unsafe.Write(dstPtr + _vectorSpan, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan));
                     if (count == _vectorSpan2) return;
                     count -= _vectorSpan2;
-                    srcPtr += _vectorSpan4;
-                    dstPtr += _vectorSpan4;
+                    srcPtr += _vectorSpan2;
+                    dstPtr += _vectorSpan2;
                 }
                 if (count >= _vectorSpan)
                 {
                     Unsafe.Write(dstPtr, Unsafe.Read<Vector<byte>>(srcPtr));
                     if (count == _vectorSpan) return;
                     count -= _vectorSpan;
-                    srcPtr += _vectorSpan4;
-                    dstPtr += _vectorSpan4;
+                    srcPtr += _vectorSpan;
+                    dstPtr += _vectorSpan;
                 }
                 if (count > 0)
                 {
@@ -174,16 +174,16 @@ namespace DotNetCross.Memory.Copies.Benchmarks
                 Unsafe.Write(dstPtr + _vectorSpan, Unsafe.Read<Vector<byte>>(srcPtr + _vectorSpan));
                 if (count == _vectorSpan2) return;
                 count -= _vectorSpan2;
-                srcPtr += _vectorSpan4;
-                dstPtr += _vectorSpan4;
+                srcPtr += _vectorSpan2;
+                dstPtr += _vectorSpan2;
             }
             if (count >= _vectorSpan)
             {
                 Unsafe.Write(dstPtr, Unsafe.Read<Vector<byte>>(srcPtr));
                 if (count == _vectorSpan) return;
                 count -= _vectorSpan;
-                srcPtr += _vectorSpan4;
-                dstPtr += _vectorSpan4;
+                srcPtr += _vectorSpan;
+                dstPtr += _vectorSpan;
             }
             if (count > 0)
             {
