@@ -12,7 +12,7 @@ namespace test
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("Initalizing setup random");
+            Console.WriteLine("Initalizing ");
 
             Console.WriteLine("Test en compile functions");
             InitArray(Array.Copy);
@@ -39,6 +39,7 @@ namespace test
             for (var i = 1; i < 256; i++)
             {
                 _src[i] = (byte) i;
+                _dst[i] = 0;
             }
             for (var i = 0; i < 256; i++)
             {
