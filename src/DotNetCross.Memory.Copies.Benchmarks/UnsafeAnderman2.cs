@@ -29,134 +29,92 @@ namespace DotNetCross.Memory.Copies.Benchmarks
         ///     Code must be optimized, in release mode and <see cref="Vector" />.IsHardwareAccelerated must be true for the
         ///     performance benefits.
         /// </remarks>
-
         public static unsafe void VectorizedCopy2(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
         {
-            if (count > 512 + 64)
-            {
-                // TEST: Disable Array-Copy fall back
-                // In-built copy faster for large arrays (vs repeated bounds checks on Vector.ctor?)
-                //Array.Copy(src, srcOffset, dst, dstOffset, count);
-                //return;
-            }
+            const int alignment = 0x10;
+            const int mask = alignment - 1;
+
+            if (count == 0) return;
             if (src == null || dst == null) throw new ArgumentNullException(nameof(src));
             if (srcOffset + count > src.Length) throw new ArgumentException(nameof(src));
-            if (dstOffset + count > dst.Length) throw new ArgumentException(nameof(dst));
             if (count < 0 || srcOffset < 0 || dstOffset < 0) throw new ArgumentOutOfRangeException(nameof(count));
+            if (dstOffset + count > dst.Length) throw new ArgumentException(nameof(dst));
+
             fixed (byte* pSrcOrigin = &src[srcOffset])
+            fixed (byte* pDstOrigin = &dst[dstOffset])
             {
                 var pSrc = pSrcOrigin;
-                fixed (byte* pDstOrigin = &dst[dstOffset])
+                var pDst = pDstOrigin;
+                if (count < 16)
                 {
-                    var pDst = pDstOrigin;
+                    if (count < 8)
                     {
-                        if (count >= Vector<byte>.Count)
+                        if (count < 4)
                         {
-                            while (count > Vector<byte>.Count)
+                            if (count < 2)
                             {
-                                Unsafe.Write(pDst, Unsafe.Read<Vector<byte>>(pSrc));
-                                count -= Vector<byte>.Count;
-                                pSrc += Vector<byte>.Count;
-                                pDst += Vector<byte>.Count;
+                                *(pDst + 0) = *(pSrc + 0);
                             }
-                            pDst += count - Vector<byte>.Count;
-                            pSrc += count - Vector<byte>.Count;
-                            Unsafe.Write(pDst, Unsafe.Read<Vector<byte>>(pSrc));
-                            return;
+                            else
+                            {
+                                *(short*) pDst = *(short*) pSrc;
+                                *(short*) (pDst + (count & 0xf) - 2) = *(short*) (pSrc + (count & 0xf) - 2);
+                            }
                         }
-
-                        switch (count)
+                        else
                         {
-                            case 15:
-                                {
-                                    *(long*)pDst = *(long*)pSrc;
-                                    *(long*)(pDst + 7) = *(long*)(pSrc + 7);
-                                    return;
-                                }
-                            case 14:
-                                {
-                                    *(long*)pDst = *(long*)pSrc;
-                                    *(long*)(pDst + 6) = *(long*)(pSrc + 6);
-                                    return;
-                                }
-                            case 13:
-                                {
-                                    *(long*)pDst = *(long*)pSrc;
-                                    *(long*)(pDst + 5) = *(long*)(pSrc + 5);
-                                    return;
-                                }
-                            case 12:
-                                {
-                                    *(long*)pDst = *(long*)pSrc;
-                                    *(int*)(pDst + 8) = *(int*)(pSrc + 8);
-                                    return;
-                                }
-                            case 11:
-                                {
-                                    *(long*)pDst = *(long*)pSrc;
-                                    *(int*)(pDst + 7) = *(int*)(pSrc + 7);
-                                    return;
-                                }
-                            case 10:
-                                {
-                                    *(long*)pDst = *(long*)pSrc;
-                                    *(short*)(pDst + 8) = *(short*)(pSrc + 8);
-                                    return;
-                                }
-                            case 9:
-                                {
-                                    *(long*)pDst = *(long*)pSrc;
-                                    *(pDst + 8) = *(pSrc + 8);
-                                    return;
-                                }
-                            case 8:
-                                {
-                                    *(long*)pDst = *(long*)pSrc;
-                                    return;
-                                }
-                            case 7:
-                                {
-                                    *(int*)pDst = *(int*)pSrc;
-                                    *(int*)(pDst + 3) = *(int*)(pSrc + 3);
-                                    return;
-                                }
-                            case 6:
-                                {
-                                    *(int*)pDst = *(int*)pSrc;
-                                    *(short*)(pDst + 4) = *(short*)(pSrc + 4);
-                                    return;
-                                }
-                            case 5:
-                                {
-                                    *(int*)pDst = *(int*)pSrc;
-                                    *(pDst + 4) = *(pSrc + 4);
-                                    return;
-                                }
-                            case 4:
-                                {
-                                    *(int*)pDst = *(int*)pSrc;
-                                    return;
-                                }
-                            case 3:
-                                {
-                                    *(short*)pDst = *(short*)pSrc;
-                                    *(pDst + 2) = *(pSrc + 2);
-                                    return;
-                                }
-                            case 2:
-                                {
-                                    *(short*)pDst = *(short*)pSrc;
-                                    return;
-                                }
-                            case 1:
-                                {
-                                    *pDst = *pSrc;
-                                    return;
-                                }
-                            case 0:
-                                return;
+                            *(int*) pDst = *(int*) pSrc;
+                            *(int*) (pDst + (count & 0xf) - 4) = *(int*) (pSrc + (count & 0xf) - 4);
                         }
                     }
+                    else
+                    {
+                        *(long*) pDst = *(long*) pSrc;
+                        *(long*) (pDst + (count & 0xf) - 8) = *(long*) (pSrc + (count & 0xf) - 8);
+                    }
+                    return;
+                }
+
+                pSrc -= (long) pDst;
+                Unsafe.Write(pDst, Unsafe.Read<Vector<byte>>(pSrc + (long) pDst));
+
+                var offset = (int) ((ulong) pDst & mask);
+                count += offset - alignment;
+                pDst += alignment - offset;
+
+                while (count >= 4*Vector<byte>.Count)
+                {
+                    var x1 = Unsafe.Read<Vector<byte>>(pSrc + (long) pDst);
+                    var x2 = Unsafe.Read<Vector<byte>>(pSrc + (long) pDst + Vector<byte>.Count);
+                    count -= 4*Vector<byte>.Count;
+                    Unsafe.Write(pDst, x1);
+                    Unsafe.Write(pDst + Vector<byte>.Count, x2);
+                    pDst += 4*Vector<byte>.Count;
+                    x1 = Unsafe.Read<Vector<byte>>(pSrc + (long) pDst - 2*Vector<byte>.Count);
+                    x2 = Unsafe.Read<Vector<byte>>(pSrc + (long) pDst - Vector<byte>.Count);
+                    Unsafe.Write(pDst - 2*Vector<byte>.Count, x1);
+                    Unsafe.Write(pDst - Vector<byte>.Count, x2);
+                }
+                while (count >= 2*Vector<byte>.Count)
+                {
+                    var x1 = Unsafe.Read<Vector<byte>>(pSrc + (long) pDst);
+                    var x2 = Unsafe.Read<Vector<byte>>(pSrc + (long) pDst + Vector<byte>.Count);
+                    count -= 2*Vector<byte>.Count;
+                    Unsafe.Write(pDst, x1);
+                    Unsafe.Write(pDst + Vector<byte>.Count, x2);
+                    pDst += 2*Vector<byte>.Count;
+                }
+                while (count >= 1*Vector<byte>.Count)
+                {
+                    var x1 = Unsafe.Read<Vector<byte>>(pSrc + (long) pDst);
+                    count -= Vector<byte>.Count;
+                    Unsafe.Write(pDst, x1);
+                    pDst += Vector<byte>.Count;
+                }
+                if (count > 0)
+                {
+                    pDst += count - Vector<byte>.Count;
+                    Unsafe.Write(pDst, Unsafe.Read<Vector<byte>>(pSrc + (long) pDst));
                 }
             }
         }
@@ -261,14 +219,14 @@ namespace DotNetCross.Memory.Copies.Benchmarks
                     return;
                 }
                 case 1:
-                    {
-                        *pDst = *pSrc;
-                        return;
-                    }
+                {
+                    *pDst = *pSrc;
+                    return;
+                }
                 case 0:
-                    {
-                        return;
-                    }
+                {
+                    return;
+                }
             }
         }
     }

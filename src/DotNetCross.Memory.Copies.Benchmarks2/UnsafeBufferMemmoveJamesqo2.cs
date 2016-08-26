@@ -1,6 +1,8 @@
 #define BIT64
 #define AMD64
 using System;
+using System.Numerics;
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,28 +14,27 @@ using nuint = System.UInt64;
 #else // BIT64
 using nuint = System.UInt32;
 #endif // BIT64
-namespace test
+namespace DotNetCross.Memory.Copies.Benchmarks2
 {
     public class UnsafeBufferMemmoveJamesqo2
     {
-        public static unsafe void Memmove(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
+        public static unsafe void Memmove(byte[] src, int srcOffset, byte[] dst, int dstOffset, int len)
         {
             if (src == null || dst == null) throw new ArgumentNullException(nameof(src));
-            if (count < 0 || srcOffset < 0 || dstOffset < 0) throw new ArgumentOutOfRangeException(nameof(count));
-            if (srcOffset + count > src.Length) throw new ArgumentException(nameof(src));
-            if (dstOffset + count > dst.Length) throw new ArgumentException(nameof(dst));
+            if (len < 0 || srcOffset < 0 || dstOffset < 0) throw new ArgumentOutOfRangeException(nameof(len));
+            if (srcOffset + len > src.Length) throw new ArgumentException(nameof(src));
+            if (dstOffset + len > dst.Length) throw new ArgumentException(nameof(dst));
 
-            fixed (byte* srcOrigin = src)
-            fixed (byte* dstOrigin = dst)
+            fixed (byte* pSrcOrigin = &src[srcOffset])
+            fixed (byte* pDstOrigin = &dst[dstOffset])
             {
-                var pSrc = srcOrigin + srcOffset;
-                var pDst = dstOrigin + dstOffset;
-
-                Memmove(pDst, pSrc, (nuint)count);
+                var srcOrigin = pSrcOrigin;
+                var dest = pDstOrigin;
+               Memmove(dest, srcOrigin, (nuint)len);
             }
         }
 
-        [System.Security.SecurityCritical]
+        //[System.Security.SecurityCritical]
         internal static unsafe void Memmove(byte* dest, byte* src, nuint len)
         {
             // P/Invoke into the native version when the buffers are overlapping and the copy needs to be performed backwards
@@ -51,7 +52,6 @@ namespace test
 
             // The switch will be very fast since it can be implemented using a jump
             // table in assembly. See http://stackoverflow.com/a/449297/4077294 for more info.
-
             switch (len)
             {
                 case 0:
@@ -188,7 +188,7 @@ namespace test
             i = 16u - i;
 
 #if AMD64
-    // SIMD is enabled for AMD64, so take advantage of that and use movdqu
+            // SIMD is enabled for AMD64, so take advantage of that and use movdqu
             *(Buffer16*)dest = *(Buffer16*)src;
 #elif ARM64
     // ARM64 has 64-bit words but no SIMD yet, so make 2 word writes
@@ -241,8 +241,8 @@ namespace test
                 // we save on writes to dest/src.
 
 #if AMD64
-    // Write 64 bytes at a time, taking advantage of xmm register on AMD64
-    // This will be translated to 4 movdqus (maybe movdqas in the future, dotnet/coreclr#2725)
+                // Write 64 bytes at a time, taking advantage of xmm register on AMD64
+                // This will be translated to 4 movdqus (maybe movdqas in the future, dotnet/coreclr#2725)
                 *(Buffer64*)(dest + i) = *(Buffer64*)(src + i);
 #elif ARM64
     // ARM64: Also unroll by 64 bytes, this time using longs since we don't
@@ -275,10 +275,10 @@ namespace test
             // If we've reached this point, there are at most chunk - 1 bytes left
 
 #if BIT64
-    // mask & 63 represents how many bytes there are left.
-    // if the mask & 32 bit is set that means this number
-    // will be >= 32. (same principle applies for other
-    // powers of 2 below)
+            // mask & 63 represents how many bytes there are left.
+            // if the mask & 32 bit is set that means this number
+            // will be >= 32. (same principle applies for other
+            // powers of 2 below)
             if ((mask & 32) != 0)
             {
 #if AMD64

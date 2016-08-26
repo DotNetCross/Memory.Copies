@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>chart</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="chart.json"></script>
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
+    <script>
+        google.charts.load('current', { packages: ['corechart', 'line'] });
+        google.charts.setOnLoadCallback(drawLineColors);
+        var options;
+        function drawLineColors() {
+            var data = new google.visualization.DataTable(chartData);
+
+            options = {
+                hAxis: {
+                    title: 'Bytes/operation'
+                },
+                vAxis: {
+                    title: 'ClockCycles/operation'
+                },
+                colors: ['#5B9BD5', '#ED7D31', '#A5A5A5', '#FFC000'],
+                height: window.innerHeight,
+                width: window.innerWidth
+        };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+        function resize() {
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            options.width = window.innerWidth;
+            options.height = window.innerHeight;
+            chart.draw(data, options);
+        }
+
+        if (document.addEventListener) {
+            window.addEventListener('resize', resize);
+        }
+        else if (document.attachEvent) {
+            window.attachEvent('onresize', resize);
+        }
+        else {
+            window.resize = resize;
+        }
+    </script>
+</head>
+<body>
+    
+    <div id="chart_div" style="height: 100%; width: 100%;"></div>
+</body>
+</html>

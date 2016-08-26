@@ -1,4 +1,4 @@
-﻿{
+{
     "version": "1.0.0-*",
     "buildOptions": {
         "emitEntryPoint": true,
@@ -10,9 +10,10 @@
             "type": "platform",
             "version": "1.0.0"
         },
-        "runtime.win7-x64.Microsoft.NETCore.Runtime.CoreCLR": "1.0.4",
         "System.Runtime.CompilerServices.Unsafe": "4.0.0",
-        "System.Linq": "4.1.0"
+        "System.Linq": "4.1.0",
+        "System.Reflection": "4.1.0",
+        "Newtonsoft.Json": "9.0.1",
     },
     "runtimes": {
         "win8-x64": {}
