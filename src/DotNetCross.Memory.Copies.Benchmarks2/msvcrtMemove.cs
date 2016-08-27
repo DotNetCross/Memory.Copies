@@ -8,12 +8,11 @@ namespace DotNetCross.Memory.Copies.Benchmarks2
 
         public static unsafe void Memmove(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
         {
-            fixed (byte* srcOrigin = src)
-            fixed (byte* dstOrigin = dst)
+            fixed (byte* pSrcOrigin = &src[srcOffset])
+            fixed (byte* pDstOrigin = &dst[dstOffset])
             {
-                var pSrc = srcOrigin + srcOffset;
-                var pDst = dstOrigin + dstOffset;
-
+                var pSrc = pSrcOrigin;
+                var pDst = pDstOrigin;
                 memmove(pDst, pSrc, count);
             }
         }
