@@ -12,17 +12,14 @@ namespace DotNetCross.Memory.Copies.Benchmarks
             if (srcOffset + count > src.Length) throw new ArgumentException(nameof(src));
             if (dstOffset + count > dst.Length) throw new ArgumentException(nameof(dst));
 
-            fixed (byte* srcOrigin = src)
-            fixed (byte* dstOrigin = dst)
+            fixed (byte* pSrcOrigin = &src[srcOffset])
+            fixed (byte* pDstOrigin = &dst[dstOffset])
             {
-                var pSrc = srcOrigin + srcOffset;
-                var pDst = dstOrigin + dstOffset;
-
-                memmove(pDst, pSrc, count);
+                memmove(pDstOrigin, pSrcOrigin, count);
             }
         }
 
         [DllImport("msvcrt.dll", SetLastError = false)]
-        public static unsafe extern IntPtr memmove(void* dest, void* src, int count);
+        public static extern unsafe IntPtr memmove(void* dest, void* src, int count);
     }
 }

@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>chart</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="chart.json"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart', 'line'] });
+        google.charts.setOnLoadCallback(drawLineColors);
+        var options;
+        function drawLineColors() {
+            var data = new google.visualization.DataTable(chartData);
+
+            options = {
+                hAxis: {
+                    title: 'Bytes/operation'
+                },
+                vAxis: {
+                    title: 'ClockCycles/operation'
+                },
+                colors: ['#5B9BD5', '#ED7D31', '#A5A5A5', '#FFC000'],
+                title:"Memmove",
+                height: window.innerHeight-20,
+                width: window.innerWidth-20
+        };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    
+    <div id="chart_div" style="height: 100%; width: 100%;"></div>
+</body>
+</html>

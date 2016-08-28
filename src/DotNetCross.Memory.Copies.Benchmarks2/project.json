@@ -1,0 +1,26 @@
+{
+    "version": "1.0.0-*",
+    "buildOptions": {
+        "emitEntryPoint": true,
+        "optimize": true,
+        "allowUnsafe": true
+    },
+    "dependencies": {
+        "Microsoft.NETCore.App": {
+            "type": "platform",
+            "version": "1.0.0"
+        },
+        "System.Runtime.CompilerServices.Unsafe": "4.0.0",
+        "System.Linq": "4.1.0",
+        "System.Reflection": "4.1.0",
+        "Newtonsoft.Json": "9.0.1",
+    },
+    "runtimes": {
+        "win8-x64": {}
+    },
+    "frameworks": {
+        "netcoreapp1.0": {
+            "imports": "dnxcore50"
+        }
+    }
+}
