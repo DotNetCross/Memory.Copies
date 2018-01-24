@@ -11,38 +11,38 @@ namespace DotNetCross.Memory.Copies.Benchmarks2
         private const ulong TestDuration = 100;
         //private static extern bool QueryThreadCycleTime(IntPtr hThread, out ulong cycles);
         //private static readonly IntPtr PseudoHandle = (IntPtr)(-2);
-        public static double loopOverhead;
+        public static double LoopOverhead;
         public static ulong CyclesPerSecond;
-        public static double nsPerCycle;
+        public static double NsPerCycle;
 
         public static void Main(string[] args)
         {
             Console.WriteLine($"Warmup...");
             //Tests.Warmup();
             CyclesPerSecond = GetCyclesPerSeond();
-            nsPerCycle = 1000*1000*1000.0/CyclesPerSecond;
+            NsPerCycle = 1000*1000*1000.0/CyclesPerSecond;
             Tests.TestDuration = TestDuration*CyclesPerSecond/1000;
-            loopOverhead = Tests.TestOverhead(1000,1000);
+            LoopOverhead = Tests.TestOverhead(1000,1000);
 
             Console.WriteLine($"offset src:      {Tests.GetOffsetSrc():X04}");
             Console.WriteLine($"offset dst:      {Tests.GetOffsetDst():X04} ");
             Console.WriteLine($"CyclesPerSecond: {CyclesPerSecond,5:0} ");
-            Console.WriteLine($"nsPerCycle:      {nsPerCycle,5:0.0000} ");
-            Console.WriteLine($"loopOverhead:    {loopOverhead,5:0.0000} Cycles");
-            Console.WriteLine($"                 {loopOverhead*nsPerCycle,5:0.0000} ns ");
+            Console.WriteLine($"nsPerCycle:      {NsPerCycle,5:0.0000} ");
+            Console.WriteLine($"loopOverhead:    {LoopOverhead,5:0.0000} Cycles");
+            Console.WriteLine($"                 {LoopOverhead*NsPerCycle,5:0.0000} ns ");
             Console.WriteLine($"Starting...");
 
 
             do
             {
-                var GoogleChart = new GoogleChart
+                var googleChart = new GoogleChart
                 {
                     cols = new[]
                     {
                         new Col {label = "X", type = "number"},
                         new Col {label = "ArrayCopy", type = "number"},
                         new Col {label = "MsvcrtMemmove", type = "number"},
-                        new Col {label = "TestJames", type = "number"},
+                        new Col {label = "AndermanMovsb", type = "number"},
                         new Col {label = "Anderman", type = "number"}
                     }
                 };
@@ -56,33 +56,31 @@ namespace DotNetCross.Memory.Copies.Benchmarks2
                     4227, 4295, 4352, 4414, 4483, 4551, 4608, 4670, 4739, 4807, 4864, 4926, 4995, 5063, 5120, 5182, 5251, 5319, 5376, 5438, 5507, 5575, 5632, 5694, 5763, 5831, 5888, 5950, 6019, 6087, 6144, 6206, 6275, 6343, 6400, 6462, 6531, 6599, 6656, 6718, 6787, 6855, 6912, 6974, 7043, 7111,
                     7168, 7230, 7299, 7367, 7424, 7486, 7555, 7623, 7680, 7742, 7811, 7879, 7936, 7998, 8067, 8135, 8192, 8254, 8323, 8391, 16384, 32768, 65536, 131072, 262144,262144+256,262144+512, 524288, 1048576, 2*1048576, 4*1048576, 8*1048576
                 };
-                var selectedSizes = sizes.Where(x => x >= 8400 && x < 1048576).ToArray();
-                GoogleChart.rows = new Row[selectedSizes.Count()];
+                var selectedSizes = sizes.Where(x => x >= 0 && x < 10).ToArray();
+                googleChart.rows = new Row[selectedSizes.Count()];
                 var index = 0;
                 foreach (var size in selectedSizes)
                 {
-                    var cycles0 = Tests.TestArray(0,  size) - loopOverhead;
-                    var cycles = Tests.TestArray(0,  size) - loopOverhead;
-                    var cycles1 = Tests.TestMsvcrtMemmove(0,  size) - loopOverhead;
-                    var cycles2 = Tests.TestJames(0, size) - loopOverhead;
-                    var cycles3 = Tests.TestAnderman(0, size) - loopOverhead;
-                    GoogleChart.rows[index++] = new Row
+                    var cycles = Tests.TestArray(0,  size) - LoopOverhead;
+                    var cycles0 = Tests.TestArray(0,  size) - LoopOverhead;
+                    var cycles2 = Tests.TestMovSb(0, size) - LoopOverhead;
+                    var cycles3 = Tests.TestAnderman(0, size) - LoopOverhead;
+                    googleChart.rows[index++] = new Row
                     {
                         c = new[]
                         {
                             new C {v = size},
-                            new C {v = cycles},
-                            new C {v = cycles1},
+                            new C {v = cycles0},
                             new C {v = cycles2},
                             new C {v = cycles3}
                         }
                     };
 
                     //double cycles3 = TestCode(TestAnderman);
-                    Console.WriteLine($"{size:0} {cycles,8:0.00}  {cycles1,8:0.00}  {cycles2,8:0.00} {cycles3,8:0.00}  ");
+                    Console.WriteLine($"{size:0} {cycles,8:0.00}  {cycles2,8:0.00} {cycles3,8:0.00}  ");
                 }
                 Console.WriteLine("ready");
-                File.WriteAllText(@"chart.json", "chartData=" + JsonConvert.SerializeObject(GoogleChart));
+                File.WriteAllText(@"chart.json", "chartData=" + JsonConvert.SerializeObject(googleChart));
 
                 Tests.Warmup();
             } while (false);

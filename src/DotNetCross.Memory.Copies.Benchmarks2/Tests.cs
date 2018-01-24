@@ -12,7 +12,7 @@ namespace DotNetCross.Memory.Copies.Benchmarks2
         private const int Randomizor = +0x3313751; //Pseudo Random Test
         private const int Alignment = 1; //Alignment test
         private const int Sequence = -1; //read seq through array
-        private const int TestMode = Cached; //Alignment test
+        private const int TestMode = Randomizor; //Alignment test
 
         private const int MinIterations = 50;
         public static ulong TestDuration = 1000000;
@@ -94,58 +94,6 @@ namespace DotNetCross.Memory.Copies.Benchmarks2
                     offset += TestMode == -1 ? size : TestMode;
                     if (offset + size >= BufferSize) offset &= 0xFFfff;
                     AndermanOptimized.Memmove(_src, offset, _dst, offset, size);
-                }
-                var end = Rdtsc.TimestampP();
-                var cycles = end - start;
-                if (cycles <= mincycles)
-                {
-                    mincycles = cycles;
-                }
-                testCycles = Rdtsc.TimestampP() - startTest;
-            } while (testCycles < TestDuration && testCycles > 0);
-            return mincycles/(double) MinIterations;
-        }
-
-        public static double TestJames(int offset,  int size)
-        {
-            var mincycles = ulong.MaxValue;
-            var startTest = Rdtsc.TimestampP();
-            var testCycles = 0UL;
-
-            do
-            {
-                var start = Rdtsc.TimestampP();
-                for (var j = 1; j < MinIterations; j++)
-                {
-                    offset += TestMode == -1 ? size : TestMode;
-                    if (offset + size >= BufferSize) offset &= 0xFFfff;
-                    UnsafeBufferMemmoveJamesqo2.Memmove(_src, offset, _dst, offset, size);
-                }
-                var end = Rdtsc.TimestampP();
-                var cycles = end - start;
-                if (cycles <= mincycles)
-                {
-                    mincycles = cycles;
-                }
-                testCycles = Rdtsc.TimestampP() - startTest;
-            } while (testCycles < TestDuration && testCycles > 0);
-            return mincycles/(double) MinIterations;
-        }
-
-        public static double TestMsvcrtMemmove(int offset, int size)
-        {
-            var mincycles = ulong.MaxValue;
-            var startTest = Rdtsc.TimestampP();
-            var testCycles = 0UL;
-
-            do
-            {
-                var start = Rdtsc.TimestampP();
-                for (var j = 1; j < MinIterations; j++)
-                {
-                    offset += TestMode == -1 ? size : TestMode;
-                    if (offset + size >= BufferSize) offset &= 0xFFfff;
-                    MsvcrtMemove.Memmove(_src, offset, _dst, offset, size);
                 }
                 var end = Rdtsc.TimestampP();
                 var cycles = end - start;

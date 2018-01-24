@@ -101,21 +101,5 @@ namespace DotNetCross.Memory.Copies.Benchmarks2
                 var result1 = movsb((ulong)pSrc, (ulong)pDst,(ulong)count);
             }
         }
-        public static unsafe void Pinvoke(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
-        {
-            if (count == 0) return;
-            if (src == null || dst == null) throw new ArgumentNullException(nameof(src));
-            if (srcOffset + count > src.Length) throw new ArgumentException(nameof(src));
-            if (count < 0 || srcOffset < 0 || dstOffset < 0) throw new ArgumentOutOfRangeException(nameof(count));
-            if (dstOffset + count > dst.Length) throw new ArgumentException(nameof(dst));
-
-            fixed (byte* pSrcOrigin = &src[srcOffset])
-            fixed (byte* pDstOrigin = &dst[dstOffset])
-            {
-                var pSrc = pSrcOrigin;
-                var pDst = pDstOrigin;
-                var result1 = pinvoke((ulong)pSrc, (ulong)pDst, (ulong)count);
-            }
-        }
     }
 }

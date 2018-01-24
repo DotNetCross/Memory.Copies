@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotNetCross.Memory.Copies.Benchmarks2
 {
@@ -250,7 +246,6 @@ namespace DotNetCross.Memory.Copies.Benchmarks2
             }
         }
 
-        public static FuncUInt64 TestMovsb { get; set; }
 
         [DllImport("kernel32.dll", ExactSpelling = true)]
         private static extern void GetNativeSystemInfo(out SystemInfo lpSystemInfo);
